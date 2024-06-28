@@ -1,0 +1,28 @@
+
+
+import "./task.zmodel";
+
+import "./teamMember.zmodel";
+
+model Project {
+  
+      id String @id @default(uuid())   
+  
+      name String    
+  
+      description String?    
+  
+      deadline String?    
+
+tasks Task[]?  @relation("project")  
+  
+      teamMembers TeamMember[]?  @relation("project")  
+  
+  dateCreated DateTime @default(now())
+  dateDeleted DateTime?
+  dateUpdated DateTime @updatedAt  @default(now())
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId   String   @default(auth().id)
+  @@allow("all", auth() == owner) )
+  @@allow("all", auth().roles?[name == 'admin']) 
+}

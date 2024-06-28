@@ -1,0 +1,33 @@
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+import "./models/account.zmodel";
+import "./models/user.zmodel";
+import "./models/role.zmodel";
+import "./models/session.zmodel";
+import "./models/verificationToken.zmodel";
+
+import "./models/project.zmodel";
+
+import "./models/task.zmodel";
+
+import "./models/comment.zmodel";
+
+import "./models/file.zmodel";
+
+import "./models/teamMember.zmodel";
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("SERVER_DATABASE_URL")
+}
+
+plugin trpc {
+  provider = '@zenstackhq/trpc'
+  output = "./src/.marblism/api"
+  generateClientHelpers = ['react']
+  generateModelActions = ['create', 'update', 'delete', 'findMany', 'findFirst', 'findUnique']
+}

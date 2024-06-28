@@ -1,0 +1,37 @@
+import "./account.zmodel";
+import "./session.zmodel";
+import "./role.zmodel";
+
+import './task.zmodel'
+
+import './comment.zmodel'
+
+import './teamMember.zmodel'
+
+import './notification.zmodel'
+
+model User {
+  id             String       @id @default(uuid())
+  name          String?
+  email         String?   @unique
+  stripeCustomerId String?
+  emailVerified DateTime?
+  password      String? @password @omit
+  image         String?
+  dateCreated   DateTime @default(now())
+  dateDeleted   DateTime?
+  dateUpdated   DateTime @updatedAt  @default(now())
+  accounts      Account[]
+  sessions      Session[]
+  roles         Role[]
+
+tasksAsAssignedUser Task[]?  @relation("assignedUser")  
+      comments Comment[]?  @relation("user")  
+      teamMembers TeamMember[]?  @relation("user")  
+      notifications Notification[]?  @relation("user")  
+
+  @@auth()
+  @@allow("all", auth().roles?[name == 'admin'] )
+  @@allow("all", auth() == this)
+  @@allow("create", true)
+}

@@ -1,0 +1,22 @@
+
+
+import "./task.zmodel";
+
+model File {
+  
+      id String @id @default(uuid())   
+  
+      fileUrl String    
+  
+      taskId String    
+  
+      task Task?  @relation(fields: [taskId], references: [id], name:"task")  
+
+dateCreated DateTime @default(now())
+  dateDeleted DateTime?
+  dateUpdated DateTime @updatedAt  @default(now())
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId   String   @default(auth().id)
+  @@allow("all", auth() == owner) )
+  @@allow("all", auth().roles?[name == 'admin']) 
+}

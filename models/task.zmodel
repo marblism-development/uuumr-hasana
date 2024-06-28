@@ -1,0 +1,42 @@
+
+
+import "./project.zmodel";
+
+import "./user.zmodel";
+
+import "./comment.zmodel";
+
+import "./file.zmodel";
+
+model Task {
+  
+      id String @id @default(uuid())   
+  
+      name String    
+  
+      description String?    
+  
+      deadline String?    
+  
+      status String    
+  
+      projectId String    
+  
+      project Project?  @relation(fields: [projectId], references: [id], name:"project")  
+  
+      assignedUserId String?    
+  
+      assignedUser User?  @relation(fields: [assignedUserId], references: [id], name:"assignedUser")  
+
+comments Comment[]?  @relation("task")  
+  
+      files File[]?  @relation("task")  
+  
+  dateCreated DateTime @default(now())
+  dateDeleted DateTime?
+  dateUpdated DateTime @updatedAt  @default(now())
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId   String   @default(auth().id)
+  @@allow("all", auth() == owner) )
+  @@allow("all", auth().roles?[name == 'admin']) 
+}

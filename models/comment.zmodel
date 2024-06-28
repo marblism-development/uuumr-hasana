@@ -1,0 +1,28 @@
+
+
+import "./task.zmodel";
+
+import "./user.zmodel";
+
+model Comment {
+  
+      id String @id @default(uuid())   
+  
+      content String    
+  
+      taskId String    
+  
+      task Task?  @relation(fields: [taskId], references: [id], name:"task")  
+  
+      userId String    
+  
+      user User?  @relation(fields: [userId], references: [id], name:"user")  
+
+dateCreated DateTime @default(now())
+  dateDeleted DateTime?
+  dateUpdated DateTime @updatedAt  @default(now())
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId   String   @default(auth().id)
+  @@allow("all", auth() == owner) )
+  @@allow("all", auth().roles?[name == 'admin']) 
+}
